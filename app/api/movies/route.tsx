@@ -13,10 +13,8 @@ export async function GET(request: Request) {
   });
   const moviesData = await moviesRes.json();
   if (lang !== "en") {
-    // Проверяем, есть ли overview
     for (const movie of moviesData.results) {
       if (!movie.overview) {
-        // Делаем второй запрос только для этого фильма
         const enRes = await fetch(
           `https://api.themoviedb.org/3/movie/${movie.id}?language=en`,
           {
