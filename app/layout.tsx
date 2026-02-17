@@ -1,4 +1,7 @@
+import "antd/dist/reset.css";
 import "./globals.css";
+import NetworkStatus from "@/component/NetworkStatus";
+import { GenreProvider } from "./context/GenreContext";
 
 export default function RootLayout({
   children,
@@ -7,7 +10,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <GenreProvider>
+          <div className="flex gap-5 border-b-2 justify-center">
+            <h2 className="text-5xl ">Movies DB</h2>
+          </div>
+          <NetworkStatus />
+          {children}
+        </GenreProvider>
+      </body>
     </html>
   );
 }

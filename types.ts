@@ -5,6 +5,7 @@ export interface Movie {
   release_date: string;
   poster_path: string;
   genre_ids: number[];
+  rating: number;
 }
 
 export interface Genre {
@@ -12,7 +13,23 @@ export interface Genre {
   name: string;
 }
 
-export type MovieTableProps = {
+export type MovieProps = {
   movies: Movie[];
   genres: Genre[];
+};
+export interface CustomInputProps {
+  name: string;
+  value: string;
+  placeholder: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface SearchInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export type GenreContextType = {
+  genres: Genre[];
+  loading: boolean;
 };
