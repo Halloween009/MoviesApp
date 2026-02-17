@@ -12,9 +12,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <GenreProvider>
-          <div className="flex gap-5 border-b-2 justify-center">
-            <h2 className="text-5xl ">Movies DB</h2>
-          </div>
           <NetworkStatus />
           {children}
         </GenreProvider>

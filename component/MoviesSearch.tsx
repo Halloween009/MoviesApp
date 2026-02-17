@@ -19,14 +19,11 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
   const [activeTab, setActiveTab] = useState<"search" | "rated">("search");
   const pageSize = 20;
 
-  const handleInputChange = (value: string) => {
-    setQuery(value);
-  };
-
+  // переходы, реакции на действия useEffect
   useEffect(() => {
-    // Сброс страницы при смене вкладки
     setPage(1);
   }, [activeTab]);
+
   useEffect(() => {
     if (activeTab === "search" && search) {
       searchMovies(search, page);
@@ -46,6 +43,11 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
     debounced(query);
     return () => debounced.cancel();
   }, [query]);
+
+  // Основа фетчи и поиски
+  const handleInputChange = (value: string) => {
+    setQuery(value);
+  };
 
   async function searchMovies(query: string, page: number) {
     setLoading(true);
@@ -78,19 +80,6 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
       setLoading(false);
     }
   }
-
-  // useEffect(() => {
-  //   if (activeTab === "search") {
-  //     if (query) {
-  //       debounceFetch(query, page);
-  //     } else {
-  //       fetchPopularMovies(page);
-  //     }
-  //   } else if (activeTab === "rated") {
-  //     fetchRatedMovies(page);
-  //   }
-  // }, [query, page, activeTab]);
-
   function getCookie(name: string) {
     const match = document.cookie.match(
       new RegExp("(^| )" + name + "=([^;]+)"),
@@ -152,7 +141,11 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
         {activeTab === "search" && (
           <SearchInput value={query} onChange={handleInputChange} />
         )}
-        <MovieTable movies={movies} genres={genres} activeTab={activeTab} />
+        {activeTab === "rated" && !loading && movies.length === 0 ? (
+          <div className="text-center text-gray-400 text-lg py-10">Нет фильмов</div>
+        ) : (
+          <MovieTable movies={movies} genres={genres} activeTab={activeTab} />
+        )}
       </div>
       <div className=" flex justify-center pb-5">
         <Pagination

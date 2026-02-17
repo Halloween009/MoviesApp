@@ -7,7 +7,6 @@ import { truncate } from "../app/util/Truncate";
 import { ru } from "date-fns/locale";
 import { useEffect, useState } from "react";
 
-// Добавляем проп activeTab
 type MovieTablePropsWithTab = MovieProps & { activeTab?: "search" | "rated" };
 export default function MovieTable({
   movies,
@@ -26,6 +25,7 @@ export default function MovieTable({
     return match ? match[1] : "";
   }
 
+  // useEffect
   useEffect(() => {
     const tmdbRatings: { [key: string]: number } = {};
     movies.forEach((movie: Movie) => {
@@ -35,6 +35,7 @@ export default function MovieTable({
     });
   }, [movies]);
 
+  // Основа
   async function setMovieRating(movieId: string | number, rating: number) {
     const guestSessionId = getGuestSessionId();
     const res = await fetch("/api/movie-rating/", {
@@ -64,14 +65,12 @@ export default function MovieTable({
     }
   }
   function getMovieRating(movie: Movie) {
-    // Если вкладка Rated — только movie.rating
     if (activeTab === "rated") {
       if (typeof movie.rating === "number") {
         return movie.rating;
       }
       return undefined;
     }
-    // Вкладка Search — localStorage или movie.rating
     if (ratings[movie.id] !== undefined) {
       return ratings[movie.id];
     }
