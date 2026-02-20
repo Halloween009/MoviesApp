@@ -11,21 +11,9 @@ export async function fetchPopularMovies() {
   const data = await res.json();
   return { results: data.results, total_pages: data.total_pages };
 }
-async function fetchMovies(apiToken: string, query: string, page: number) {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=ru-RU&page=${page}`,
-    {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  if (!res.ok) throw new Error("Error fetching movies");
-  return res.json();
-}
 
 export async function getPopularMoviesWithRating() {
+  await new Promise((r) => setTimeout(r, 3000));
   const guestSessionIdObj = (await cookies()).get("guest_session_id");
   const guestSessionId = guestSessionIdObj?.value;
   const apiKey = process.env.TMDB_API_KEY;

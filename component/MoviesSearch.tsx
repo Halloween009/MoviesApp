@@ -36,7 +36,7 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
     } else if (activeTab === "rated") {
       fetchRatedMovies(page);
     }
-  }, [page, query, activeTab]);
+  }, [page, search, activeTab]);
 
   useEffect(() => {
     const debounced = debounce((val: string) => setSearch(val), 1000);
@@ -111,7 +111,7 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
   };
 
   return (
-    <Spin spinning={loading}>
+    <>
       {error && <Alert type="error" title={error} />}
       <div className="flex justify-center  mt-10">
         <button onClick={() => setActiveTab("search")}>
@@ -137,12 +137,14 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
           </span>
         </button>
       </div>
-      <div className="flex flex-col p-4 gap-4 mx-[10%]">
+      <div className="flex flex-col p-4 gap-4 max-w-[1200px] mx-auto ">
         {activeTab === "search" && (
           <SearchInput value={query} onChange={handleInputChange} />
         )}
         {activeTab === "rated" && !loading && movies.length === 0 ? (
-          <div className="text-center text-gray-400 text-lg py-10">Нет фильмов</div>
+          <div className="text-center text-gray-400 text-lg py-10">
+            Нет фильмов
+          </div>
         ) : (
           <MovieTable movies={movies} genres={genres} activeTab={activeTab} />
         )}
@@ -156,7 +158,7 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
           showSizeChanger={false}
         />
       </div>
-    </Spin>
+    </>
   );
 };
 
