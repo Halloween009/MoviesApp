@@ -107,7 +107,7 @@ export default function MovieTable({
           onClose={() => setAlertMessage(null)}
         />
       )}
-      <div className="m-5 gap-10 flex">
+      <div className="flex">
         <Row gutter={{ xs: 24, sm: 12 }} justify="center">
           {movies.map((movie: Movie) => (
             <Col
@@ -117,12 +117,12 @@ export default function MovieTable({
               lg={12}
               xl={12}
               xxl={12}
-              style={{ minWidth: 500 }}
+              style={{ minWidth: 500, minHeight: 310 }}
               key={movie.id}
             >
-              <div className="flex max-w-[500px] mx-10%">
+              <div className="flex min-w-[500px] min mx-10%">
                 <Card hoverable styles={{ body: { padding: 0 } }}>
-                  <div className="flex flex-row relative">
+                  <div className="flex flex-row relative h-[281px]">
                     {movie.poster_path ? (
                       <Image
                         src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
@@ -135,7 +135,7 @@ export default function MovieTable({
                         No Image
                       </div>
                     )}
-                    <div className="p-5">
+                    <div className="p-5 min-h-[281px] min-w-[400px]">
                       <h2>{movie.title}</h2>
                       <p>
                         {movie.release_date
@@ -157,7 +157,13 @@ export default function MovieTable({
                           ) : null,
                         )}
                       </div>
-                      <p>{truncate(movie.overview, 150)}</p>
+                      {movie.overview ? (
+                        <p>{truncate(movie.overview, 150)}</p>
+                      ) : (
+                        <p className=" flex grow min-w-[200px]">
+                          No description
+                        </p>
+                      )}
                       <div>
                         <Rate
                           count={10}
@@ -170,7 +176,8 @@ export default function MovieTable({
                         />
                       </div>
                     </div>
-                    {typeof getMovieRating(movie) === "number" && getMovieRating(movie)! > 0 && (
+
+                    {getMovieRating(movie)! > 0 && (
                       <div
                         className="absolute top-2 right-2 px-5 rounded-2xl z-10"
                         style={{
