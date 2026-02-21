@@ -170,7 +170,7 @@ export default function MovieTable({
                         />
                       </div>
                     </div>
-                    {getMovieRating(movie) > 0 && (
+                    {typeof getMovieRating(movie) === "number" && getMovieRating(movie)! > 0 && (
                       <div
                         className="absolute top-2 right-2 px-5 rounded-2xl z-10"
                         style={{
