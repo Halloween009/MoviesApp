@@ -131,7 +131,7 @@ export default function MovieTable({
                         height={281}
                       />
                     ) : (
-                      <div className="w-48 h-72 shrink-0 flex items-center justify-center bg-gray-200 text-gray-500">
+                      <div className="w-[183] h-[281] shrink-0 flex items-center justify-center bg-gray-200 text-gray-500">
                         No Image
                       </div>
                     )}

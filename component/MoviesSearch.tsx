@@ -111,7 +111,7 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
   };
 
   return (
-    <>
+    <Spin spinning={loading}>
       {error && <Alert type="error" title={error} />}
       <div className="flex justify-center  mt-10">
         <button onClick={() => setActiveTab("search")}>
@@ -158,7 +158,7 @@ const MoviesSearch = ({ movies: popularMovies }: { movies: Movie[] }) => {
           showSizeChanger={false}
         />
       </div>
-    </>
+    </Spin>
   );
 };
 
