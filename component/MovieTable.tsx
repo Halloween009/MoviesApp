@@ -3,8 +3,7 @@ import { Genre, Movie, MovieProps } from "@/types";
 import Image from "next/image";
 import { Card, Row, Col, Tag, Rate, Alert } from "antd";
 import { format } from "date-fns";
-import { truncate } from "../app/util/Truncate";
-import { ru } from "date-fns/locale";
+import { truncate } from "@/app/util/Truncate";
 import { useEffect, useState } from "react";
 
 type MovieTablePropsWithTab = MovieProps & { activeTab?: "search" | "rated" };
@@ -120,7 +119,7 @@ export default function MovieTable({
               style={{ minWidth: 500, minHeight: 310 }}
               key={movie.id}
             >
-              <div className="flex min-w-[500px] min mx-10%">
+              <div className="flex max-w-full mx-10%">
                 <Card hoverable styles={{ body: { padding: 0 } }}>
                   <div className="flex flex-row relative h-[281px]">
                     {movie.poster_path ? (
@@ -135,17 +134,11 @@ export default function MovieTable({
                         No Image
                       </div>
                     )}
-                    <div className="p-5 min-h-[281px] min-w-[400px]">
+                    <div className="p-5 min-h-[281px] w-full">
                       <h2>{movie.title}</h2>
                       <p>
                         {movie.release_date
-                          ? format(
-                              new Date(movie.release_date),
-                              "d MMMM, yyyy",
-                              {
-                                locale: ru,
-                              },
-                            )
+                          ? format(new Date(movie.release_date), "d MMMM, yyyy")
                           : null}
                       </p>
                       <div className="flex gap-2 pb-1.5 flex-wrap">
