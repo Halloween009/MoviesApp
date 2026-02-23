@@ -3,8 +3,9 @@ import { Genre, Movie, MovieProps } from "@/types";
 import Image from "next/image";
 import { Card, Row, Col, Tag, Rate, Alert } from "antd";
 import { format } from "date-fns";
-import { truncate } from "@/app/util/Truncate";
-import { useEffect, useState } from "react";
+import { truncate } from "@/app/util/truncate";
+import { getRatingColor } from "@/app/util/getRatingColor";
+import { useMovieRating } from "@/hooks/useMovieRating";
 
 type MovieTablePropsWithTab = MovieProps & { activeTab?: "search" | "rated" };
 export default function MovieTable({
@@ -13,87 +14,14 @@ export default function MovieTable({
   activeTab,
 }: MovieTablePropsWithTab) {
   const genreMap = Object.fromEntries(genres.map((g: Genre) => [g.id, g.name]));
-  const [ratings, setRatings] = useState<{ [key: string]: number }>({});
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  const [alertStatus, setAlertStatus] = useState<
-    "success" | "error" | undefined
-  >(undefined);
-  function getGuestSessionId() {
-    if (typeof document === "undefined") return "";
-    const match = document.cookie.match(/(?:^|; )guest_session_id=([^;]*)/);
-    return match ? match[1] : "";
-  }
-
-  // useEffect
-  useEffect(() => {
-    const tmdbRatings: { [key: string]: number } = {};
-    movies.forEach((movie: Movie) => {
-      if (typeof movie.rating === "number" && !isNaN(movie.rating)) {
-        tmdbRatings[movie.id] = movie.rating;
-      }
-    });
-  }, [movies]);
-
-  // Основа
-  async function setMovieRating(movieId: string | number, rating: number) {
-    const guestSessionId = getGuestSessionId();
-    const res = await fetch("/api/movie-rating/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        movieId,
-        rating,
-      }),
-      credentials: "include",
-    });
-    if (res.ok) {
-      setAlertMessage("Success rating");
-      setAlertStatus("success");
-      setRatings((prev) => ({ ...prev, [movieId]: rating }));
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          `rating_${guestSessionId}_${movieId}`,
-          String(rating),
-        );
-      }
-    } else {
-      setAlertMessage("Error rating");
-      setAlertStatus("error");
-    }
-  }
-  function getMovieRating(movie: Movie) {
-    if (activeTab === "rated") {
-      if (typeof movie.rating === "number") {
-        return movie.rating;
-      }
-      return undefined;
-    }
-    if (ratings[movie.id] !== undefined) {
-      return ratings[movie.id];
-    }
-    if (typeof window !== "undefined") {
-      const guestSessionId = getGuestSessionId();
-      const local = localStorage.getItem(
-        `rating_${guestSessionId}_${movie.id}`,
-      );
-      if (local !== null) {
-        return Number(local);
-      }
-    }
-    if (typeof movie.rating === "number") {
-      return movie.rating;
-    }
-    return undefined;
-  }
-  function getRatingColor(rating: number | undefined) {
-    if (typeof rating !== "number" || isNaN(rating)) return;
-    if (rating <= 3) return "#E90000";
-    if (rating > 3 && rating <= 5) return "#E97E00";
-    if (rating > 5 && rating <= 7) return "#E9D100";
-    if (rating > 7) return "#66E900";
-  }
+  const {
+    ratings,
+    setMovieRating,
+    getMovieRating,
+    alertMessage,
+    alertStatus,
+    setAlertMessage,
+  } = useMovieRating(movies);
 
   return (
     <div className="bg-gray-50 flex flex-col">
@@ -161,25 +89,29 @@ export default function MovieTable({
                         <Rate
                           count={10}
                           allowHalf
-                          value={getMovieRating(movie) ?? undefined}
+                          value={
+                            getMovieRating(movie.id, movie.rating) ?? undefined
+                          }
                           onChange={(value) => setMovieRating(movie.id, value)}
                           style={{
-                            color: getRatingColor(getMovieRating(movie)),
+                            color: getRatingColor(
+                              getMovieRating(movie.id, movie.rating),
+                            ),
                           }}
                         />
                       </div>
                     </div>
 
-                    {getMovieRating(movie)! > 0 && (
+                    {getMovieRating(movie.id, movie.rating)! > 0 && (
                       <div
                         className="absolute top-2 right-2 px-5 rounded-2xl z-10"
                         style={{
                           backgroundColor: getRatingColor(
-                            getMovieRating(movie),
+                            getMovieRating(movie.id, movie.rating),
                           ),
                         }}
                       >
-                        {getMovieRating(movie)}
+                        {getMovieRating(movie.id, movie.rating)}
                       </div>
                     )}
                   </div>
