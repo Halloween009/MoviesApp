@@ -3,7 +3,7 @@ import { Genre, Movie, MovieProps } from "@/types";
 import Image from "next/image";
 import { Card, Row, Col, Tag, Rate, Alert } from "antd";
 import { format } from "date-fns";
-import { truncate } from "../app/util/truncate";
+import { truncate } from "../app/util/truncates";
 import { getRatingColor } from "@/app/util/getRatingColor";
 import { useMovieRating } from "@/hooks/useMovieRating";
 
