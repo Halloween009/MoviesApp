@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Movie, Genre } from "@/types";
+import { Movie } from "@/types";
 import { useDebounce } from "./useDebounce";
 import { getCookie } from "@/app/util/getCookie";
 
